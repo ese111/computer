@@ -7,45 +7,40 @@
 ## ✅ 완료된 단계
 
 ### Phase 1: 트랜지스터 & 논리 게이트 (`01_gates`)
-- `Bit`: `Zero`, `One` 열거형 및 기본 변환 로직 구현.
-- `gates`: `nand`를 원시 게이트로 하여 `not`, `and`, `or`, `nor`, `xor` 구현 완료.
-- `Bus<const N: usize>`: N비트 버스 타입 및 `u16` 상호 변환 유틸리티 구현 완료.
+- `Bit`: `Zero`, `One` 열거형 및 `Default` 구현 (기본값: `Zero`).
+- `gates`: `nand`를 원시 게이트로 하여 모든 기본 논리 게이트 구현 완료.
+- `Bus<const N: usize>`: N비트 버스 타입 구현 완료.
 
 ### Phase 2: 조합 회로 (`02_combinational`)
-- `adders`: `HalfAdder`, `FullAdder`, `Adder16`(리플 캐리 방식) 구현 및 테스트 완료.
-- `mux`: `Mux`, `DMux`, `Mux16`, `Mux4way16`, `Mux8way16` 구현 완료. (하드웨어의 제어문 역할)
-- `decoder`: `Decoder3to8` 구현 완료. (주소 선택 및 명령어 해석용)
+- `adders`: `Adder16` 등 산술 회로 구현 완료.
+- `mux`: 다양한 채널의 멀티플렉서 구현 완료.
+- `decoder`: `Decoder3to8` 구현 완료.
+
+### Phase 3: 순차 회로 (`03_sequential`)
+- `dff`: 기억의 최소 단위인 **D Flip-Flop** 구현 완료.
+- `register`: 16비트 데이터를 저장하고 `load` 신호로 제어하는 **Register16** 구현 완료.
+- `pc`: 명령어 주소를 관리하는 **Program Counter** 구현 및 테스트 완료. (Reset, Load, Inc 기능)
 
 ---
 
-## 🚀 현재 진행 중인 단계: Phase 3 (순차 회로)
+## 🚀 현재 진행 중인 단계: Phase 4 (ALU - Arithmetic Logic Unit)
 
-**핵심 개념: 시간(Time)과 상태(State)의 도입**
-- 조합 회로는 입력 즉시 출력이 결정되지만, 순차 회로는 클락(Clock)에 맞춰 상태를 저장하고 유지합니다.
-
-### 현재 작업 상황
-- `crates/03_sequential/Cargo.toml` 설정 완료 (`gates`, `combinational` 의존성 포함).
-- `src/lib.rs` 모듈 구조 선언 완료.
+**핵심 개념: CPU의 계산 엔진**
+- 산술(Arithmetic) 연산과 논리(Logic) 연산을 수행하는 장치입니다.
+- 제어 신호(AluOp)에 따라 덧셈, 뺄셈, AND, OR 등을 선택적으로 수행합니다.
 
 ### 📝 다음 작업 (Next Steps)
 
-1.  **`src/dff.rs` 구현 완료**:
-    - `DFF` (D Flip-Flop) 구조체 구현.
-    - `current`, `next` 필드를 활용한 1비트 저장 로직.
-    - `tick()` 메서드를 호출할 때 `next`가 `current`로 복사되는 시뮬레이션 구현.
-
-2.  **`src/register.rs` 구현**:
-    - `Register16`: 16개의 DFF를 묶어 16비트 데이터를 저장.
-    - `load` 신호 구현: `load`가 1일 때만 새 값을 저장하고, 0일 때는 기존 값을 유지 (Mux 활용).
-
-3.  **`src/pc.rs` 구현**:
-    - `Program Counter`: 다음에 실행할 명령어 주소를 가리키는 특수 레지스터.
-    - 기능: `inc` (1 증가), `load` (특정 주소로 점프), `reset` (0으로 초기화).
-    - Phase 2의 `Adder16`을 사용하여 `inc` 로직 구현.
+1.  **`src/alu.rs` 구현**:
+    - `AluOp` 정의: 어떤 연산을 할지 결정하는 비트 조합.
+    - 16비트 산술 연산 (Add, Sub).
+    - 16비트 논리 연산 (And, Or, Not).
+    - **Zero Flag (ZR)**: 결과가 0인 경우 1 출력.
+    - **Negative Flag (NG)**: 결과가 음수인 경우 1 출력.
 
 ---
 
 ## 🛠 기술적 참고 사항
-- 모든 순차 회로는 `tick()` 함수를 가집니다.
-- **박자 맞추기**: 전체 시스템 테스트 시 모든 소자의 `tick()`을 동시에 호출하여 상태를 전이시킵니다.
-- `gates::bus::Bus`를 적극 활용하여 16비트 처리를 수행합니다.
+- `Bit` 타입에 `Default`를 구현하여 모든 순차 소자가 안전하게 `Zero`로 초기화되도록 보장함.
+- `sequential` 크레이트는 `gates`와 `combinational`의 로직을 결합하여 상태를 가짐.
+- 다음 단계인 ALU는 순수 조합 회로이지만, CPU의 제어 장치(Control Unit)와 밀접하게 연동될 예정.

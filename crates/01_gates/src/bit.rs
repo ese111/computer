@@ -27,6 +27,12 @@ impl From<u8> for Bit {
     }
 }
 
+impl Default for Bit {
+    fn default() -> Self {
+        Bit::Zero
+    }
+}
+
 impl fmt::Display for Bit {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
