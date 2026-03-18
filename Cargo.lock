@@ -3,6 +3,14 @@
 version = 4
 
 [[package]]
+name = "alu"
+version = "0.1.0"
+dependencies = [
+ "combinational",
+ "gates",
+]
+
+[[package]]
 name = "combinational"
 version = "0.1.0"
 dependencies = [

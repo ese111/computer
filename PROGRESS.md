@@ -19,28 +19,33 @@
 ### Phase 3: 순차 회로 (`03_sequential`)
 - `dff`: 기억의 최소 단위인 **D Flip-Flop** 구현 완료.
 - `register`: 16비트 데이터를 저장하고 `load` 신호로 제어하는 **Register16** 구현 완료.
-- `pc`: 명령어 주소를 관리하는 **Program Counter** 구현 및 테스트 완료. (Reset, Load, Inc 기능)
+- `pc`: 명령어 주소를 관리하는 **Program Counter** 구현 및 테스트 완료.
+
+### Phase 4: ALU (Arithmetic Logic Unit) (`04_alu`)
+- **ALU 구현 완료**: 6개의 제어 비트(`zx, nx, zy, ny, f, no`)를 조합하여 18가지 이상의 연산 수행 가능.
+- **플래그 생성**: 결과가 0인지(`zr`), 음수인지(`ng`) 판단하는 상태 비트 출력 기능 구현.
+- **유틸리티**: 16비트 단위의 AND, NOT 연산 로직 포함.
 
 ---
 
-## 🚀 현재 진행 중인 단계: Phase 4 (ALU - Arithmetic Logic Unit)
+## 🚀 현재 진행 중인 단계: Phase 5 (메모리 - Memory)
 
-**핵심 개념: CPU의 계산 엔진**
-- 산술(Arithmetic) 연산과 논리(Logic) 연산을 수행하는 장치입니다.
-- 제어 신호(AluOp)에 따라 덧셈, 뺄셈, AND, OR 등을 선택적으로 수행합니다.
+**핵심 개념: 데이터의 대량 저장과 주소 지정(Addressing)**
+- 레지스터를 계층적으로 쌓아 올려 거대한 RAM 공간을 만듭니다.
+- `RAM8` -> `RAM64` -> `RAM512` -> `RAM4K` -> `RAM16K` 순으로 확장합니다.
 
 ### 📝 다음 작업 (Next Steps)
 
-1.  **`src/alu.rs` 구현**:
-    - `AluOp` 정의: 어떤 연산을 할지 결정하는 비트 조합.
-    - 16비트 산술 연산 (Add, Sub).
-    - 16비트 논리 연산 (And, Or, Not).
-    - **Zero Flag (ZR)**: 결과가 0인 경우 1 출력.
-    - **Negative Flag (NG)**: 결과가 음수인 경우 1 출력.
+1.  **`src/ram.rs` 구현**:
+    - `RAM8`: 8개의 `Register16`과 주소 선택을 위한 `DMux8Way`, `Mux8Way16` 결합.
+    - `RAM64`: 8개의 `RAM8`을 묶어 더 큰 주소 공간 확보.
+2.  **`src/rom.rs` 구현**:
+    - 프로그램 코드를 읽기 전용으로 저장하는 ROM 시뮬레이션.
+3.  **`src/memory_map.rs` 구현**:
+    - 특정 주소 범위에 따라 RAM, Screen, Keyboard 등으로 데이터를 라우팅하는 로직.
 
 ---
 
 ## 🛠 기술적 참고 사항
-- `Bit` 타입에 `Default`를 구현하여 모든 순차 소자가 안전하게 `Zero`로 초기화되도록 보장함.
-- `sequential` 크레이트는 `gates`와 `combinational`의 로직을 결합하여 상태를 가짐.
-- 다음 단계인 ALU는 순수 조합 회로이지만, CPU의 제어 장치(Control Unit)와 밀접하게 연동될 예정.
+- ALU는 순수 조합 회로로 구현되었으며, `sequential`의 레지스터들과 결합하여 다음 단계의 CPU 데이터패스를 형성함.
+- `PROGRESS.md`를 통해 각 단계별 의존성과 핵심 성취를 지속적으로 추적 중.

@@ -5,6 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/crates/01_gates/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/crates/02_combinational/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/crates/03_sequential/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/04_alu/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
