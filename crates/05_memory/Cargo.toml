@@ -1,0 +1,9 @@
+[package]
+name = "memory"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+gates = { path = "../01_gates" }
+combinational = { path = "../02_combinational" }
+sequential = { path = "../03_sequential" }

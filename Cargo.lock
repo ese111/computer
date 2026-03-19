@@ -22,6 +22,15 @@ name = "gates"
 version = "0.1.0"
 
 [[package]]
+name = "memory"
+version = "0.1.0"
+dependencies = [
+ "combinational",
+ "gates",
+ "sequential",
+]
+
+[[package]]
 name = "sequential"
 version = "0.1.0"
 dependencies = [

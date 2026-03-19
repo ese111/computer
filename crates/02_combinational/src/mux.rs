@@ -14,6 +14,22 @@ pub fn dmux(in_bit: Bit, sel: Bit) -> (Bit, Bit) {
     (and(in_bit, not(sel)), and(in_bit, sel))
 }
 
+/// 4-way Demultiplexor
+pub fn dmux4way(in_bit: Bit, sel: [Bit; 2]) -> (Bit, Bit, Bit, Bit) {
+    let (a_b, c_d) = dmux(in_bit, sel[1]);
+    let (a, b) = dmux(a_b, sel[0]);
+    let (c, d) = dmux(c_d, sel[0]);
+    (a, b, c, d)
+}
+
+/// 8-way Demultiplexor
+pub fn dmux8way(in_bit: Bit, sel: [Bit; 3]) -> (Bit, Bit, Bit, Bit, Bit, Bit, Bit, Bit) {
+    let (a_d, e_h) = dmux(in_bit, sel[2]);
+    let (a, b, c, d) = dmux4way(a_d, [sel[0], sel[1]]);
+    let (e, f, g, h) = dmux4way(e_h, [sel[0], sel[1]]);
+    (a, b, c, d, e, f, g, h)
+}
+
 /// 16비트 Mux
 pub fn mux16(a: Bus<16>, b: Bus<16>, sel: Bit) -> Bus<16> {
     let mut result = [Bit::Zero; 16];

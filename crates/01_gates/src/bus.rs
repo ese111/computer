@@ -21,8 +21,8 @@ impl<const N: usize> Bus<N> {
     }
 }
 
-impl Bus<16> {
-    pub fn from_u16(value: u16) -> Self {
+impl From<u16> for Bus<16> {
+    fn from(value: u16) -> Self {
         let mut bits = [Bit::Zero; 16];
         for i in 0..16 {
             if (value >> i) & 1 == 1 {
@@ -31,11 +31,13 @@ impl Bus<16> {
         }
         Self(bits)
     }
+}
 
-    pub fn to_u16(&self) -> u16 {
+impl From<Bus<16>> for u16 {
+    fn from(bus: Bus<16>) -> Self {
         let mut value = 0u16;
         for i in 0..16 {
-            if self.0[i] == Bit::One {
+            if bus.0[i] == Bit::One {
                 value |= 1 << i;
             }
         }
@@ -56,7 +58,7 @@ mod tests {
     #[test]
     fn test_bus_u16() {
         let val = 0b1010_1100_1111_0000u16;
-        let bus = Bus::from_u16(val);
-        assert_eq!(bus.to_u16(), val);
+        let bus = Bus::from(val);
+        assert_eq!(u16::from(bus), val);
     }
 }
